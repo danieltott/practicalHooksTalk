@@ -56,7 +56,9 @@ export default class Todos extends React.Component {
       <SemipolarSpinner color="#ccc" className="spinner" />
     ) : (
       <>
-        <h2>Todos for {this.state.user.name}</h2>
+        <h2 className="title is-3 is-spaced">
+          Todos for {this.state.user.name}
+        </h2>
         {this.state.todos.map(todo => (
           <Todo key={todo.id} todo={todo} />
         ))}
