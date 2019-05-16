@@ -9,3 +9,12 @@
 .spinner {
   margin: 2em auto;
 }
+
+.loaderSvg {
+  width: 100px;
+  height: 100px;
+}
+.loaderSvg path,
+.loaderSvg rect {
+  fill: #ff6700;
+}

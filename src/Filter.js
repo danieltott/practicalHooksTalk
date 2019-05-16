@@ -39,6 +39,7 @@ export default class Filter extends React.Component {
     const { isLoadingUsers, users, updateUserSettings } = this.props;
     return (
       <form
+        data-testid="filtersform"
         onSubmit={e => {
           e.preventDefault();
           updateUserSettings(this.state.formData);
@@ -54,6 +55,7 @@ export default class Filter extends React.Component {
                 disabled={isLoadingUsers || !users}
                 onChange={this.updateUserSelect}
                 value={this.state.formData.userId}
+                name="user"
               >
                 {isLoadingUsers || !users ? (
                   <option>Loading users...</option>
