@@ -1,7 +1,7 @@
 import React from 'react';
-import { SemipolarSpinner } from 'react-epic-spinners';
 import Todo from './Todo';
 import Api from './Api';
+import { ReactComponent as Loader } from './Loader.svg';
 
 export default class Todos extends React.Component {
   constructor(props) {
@@ -10,7 +10,8 @@ export default class Todos extends React.Component {
       user: props.user,
       showCompleted: props.showCompleted,
       todos: null,
-      isLoading: false
+      isLoading: false,
+      updatedAt: null
     };
   }
 
@@ -18,13 +19,18 @@ export default class Todos extends React.Component {
     this.setState({ isLoading: true });
 
     Api.fetchTodosByUser(this.state.user.id, this.state.showCompleted)
-      .then(data =>
+      .then(data => {
         this.setState({
           todos: data,
-          isLoading: false
-        })
-      )
+          isLoading: false,
+          updatedAt: new Date()
+        });
+      })
       .catch(error => this.setState({ error, isLoading: false }));
+
+    this.timer = setTimeout(() => {
+      this.fetchTodos();
+    }, 5000);
   }
 
   componentDidMount() {
@@ -39,10 +45,12 @@ export default class Todos extends React.Component {
       prevProps.user !== this.props.user ||
       prevProps.showCompleted !== this.props.showCompleted
     ) {
+      clearTimeout(this.timer);
       this.setState(
         {
           user: this.props.user,
-          showCompleted: this.props.showCompleted
+          showCompleted: this.props.showCompleted,
+          todos: null
         },
         () => {
           this.fetchTodos();
@@ -52,14 +60,34 @@ export default class Todos extends React.Component {
   }
 
   render() {
-    return this.state.isLoading || !this.state.todos ? (
-      <SemipolarSpinner color="#ccc" className="spinner" />
-    ) : (
+    const { isLoading, todos, user, updatedAt } = this.state;
+
+    if (!todos && isLoading) {
+      return <Loader className="loaderSvg" />;
+    }
+
+    if (!todos) {
+      return (
+        <div>
+          <div>Select a user to get started...</div>
+        </div>
+      );
+    }
+
+    return (
       <>
-        <h2 className="title is-3 is-spaced">
-          Todos for {this.state.user.name}
-        </h2>
-        {this.state.todos.map(todo => (
+        <div className="columns">
+          <h2 className="column title is-spaced">Todos for {user.name}</h2>
+          <div className="column is-narrow" style={{ marginTop: '16px' }}>
+            {isLoading && 'Checking for updates...'}
+          </div>
+        </div>
+        <p>
+          <em>
+            Updated at {updatedAt.toDateString()} {updatedAt.toTimeString()}
+          </em>
+        </p>
+        {todos.map(todo => (
           <Todo key={todo.id} todo={todo} />
         ))}
       </>
