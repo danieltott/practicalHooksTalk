@@ -9,7 +9,7 @@ const Todo = ({ todo }) => {
           textDecoration: todo.completed ? 'line-through' : 'normal'
         }}
       >
-        (User ID: ${todo.userId}) {todo.title}
+        (User ID: {todo.userId}) {todo.title}
       </p>
     </div>
   );

@@ -9,6 +9,7 @@ export default class App extends React.Component {
     super(props);
 
     this.updateUserSettings = this.updateUserSettings.bind(this);
+    this.fetchTodos = this.fetchTodos.bind(this);
   }
 
   state = {
@@ -22,8 +23,12 @@ export default class App extends React.Component {
   };
 
   fetchUsers() {
+    return Api.fetchUsers();
+  }
+
+  runFetchUsers() {
     this.setState({ isLoadingUsers: true });
-    Api.fetchUsers()
+    this.fetchUsers()
       .then(data =>
         this.setState({
           users: data,
@@ -33,8 +38,15 @@ export default class App extends React.Component {
       .catch(error => this.setState({ error, isLoadingUsers: false }));
   }
 
+  fetchTodos() {
+    return Api.fetchTodosByUser(
+      this.state.selectedUser.id,
+      this.state.showCompleted
+    );
+  }
+
   componentDidMount() {
-    this.fetchUsers();
+    this.runFetchUsers();
   }
 
   updateUserSettings(formData) {
@@ -62,7 +74,11 @@ export default class App extends React.Component {
               />
             </div>
             <div className="column is-three-quarters">
-              <Todos user={selectedUser} showCompleted={showCompleted} />
+              <Todos
+                user={selectedUser}
+                showCompleted={showCompleted}
+                fetchTodos={this.fetchTodos}
+              />
             </div>
           </div>
         </div>

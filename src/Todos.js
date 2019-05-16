@@ -1,6 +1,5 @@
 import React from 'react';
 import Todo from './Todo';
-import Api from './Api';
 import { ReactComponent as Loader } from './Loader.svg';
 
 export default class Todos extends React.Component {
@@ -8,7 +7,6 @@ export default class Todos extends React.Component {
     super(props);
     this.state = {
       user: props.user,
-      showCompleted: props.showCompleted,
       todos: null,
       isLoading: false,
       updatedAt: null
@@ -18,7 +16,8 @@ export default class Todos extends React.Component {
   fetchTodos() {
     this.setState({ isLoading: true });
 
-    Api.fetchTodosByUser(this.state.user.id, this.state.showCompleted)
+    this.props
+      .fetchTodos()
       .then(data => {
         this.setState({
           todos: data,
@@ -41,15 +40,11 @@ export default class Todos extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // console.log(this.props.user);
-    if (
-      prevProps.user !== this.props.user ||
-      prevProps.showCompleted !== this.props.showCompleted
-    ) {
+    if (prevProps.user !== this.props.user) {
       clearTimeout(this.timer);
       this.setState(
         {
           user: this.props.user,
-          showCompleted: this.props.showCompleted,
           todos: null
         },
         () => {

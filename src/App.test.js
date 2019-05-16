@@ -22,7 +22,9 @@ describe('App', () => {
       { status: 200 }
     ]);
 
-    const { debug, container, getByLabelText, getByTestId } = render(<App />);
+    const { debug, container, getByLabelText, getByTestId, getByText } = render(
+      <App />
+    );
 
     const form = getByTestId('filtersform');
     expect(form).toHaveFormValues({ showCompleted: 'All' });
@@ -30,9 +32,14 @@ describe('App', () => {
     fireEvent.click(getByLabelText('Completed'));
 
     expect(form).toHaveFormValues({ showCompleted: 'Completed' });
-  });
 
-  it('Renders a filter form with "Completed" pre-selected', async () => {
+    // wait for promise to clear.
+    await waitForElement(() => getByText('Leanne Graham'), {
+      container
+    });
+  }, 20000);
+
+  it('Renders a select with user options', async () => {
     fetch.mockResponses([
       `[{"id": 1,"name": "Leanne Graham"}]`,
       { status: 200 }
@@ -49,9 +56,9 @@ describe('App', () => {
     const form = getByTestId('filtersform');
 
     expect(form).toHaveFormValues({ user: '' });
-  });
+  }, 20000);
 
-  fit('Loads todos for a user once one is selected', async () => {
+  it('Loads todos for a user once one is selected', async () => {
     fetch.mockResponses(
       [`[{"id": 1,"name": "Leanne Graham"}]`, { status: 200 }],
       [
@@ -79,7 +86,7 @@ describe('App', () => {
 
     expect(title).toBeVisible();
 
-    const oneToDo = getByText('delectus aut autem');
+    const oneToDo = getByText('(User ID: 1) delectus aut autem');
 
     expect(oneToDo).toBeVisible();
   }, 20000);
