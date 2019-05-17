@@ -1,4 +1,5 @@
 import React from 'react';
+import SelectUsers from './SelectUsers';
 
 export default class Filter extends React.Component {
   constructor(props) {
@@ -19,7 +20,12 @@ export default class Filter extends React.Component {
   }
 
   render() {
-    const { isLoadingUsers, users, updateUserSettings } = this.props;
+    const {
+      isLoadingUsers,
+      users,
+      updateUserSettings,
+      refreshUsers
+    } = this.props;
     const { userId, showCompleted } = this.state;
     return (
       <form
@@ -34,28 +40,19 @@ export default class Filter extends React.Component {
           <label className="label">User:</label>
           <div className="control">
             <div className="select">
-              <select
-                className="input"
-                disabled={isLoadingUsers || !users}
+              <SelectUsers
+                isLoading={isLoadingUsers}
+                users={users}
+                userId={this.state.userId}
                 onChange={this.updateFormInput}
-                value={this.state.userId}
-                name="userId"
-              >
-                {isLoadingUsers || !users ? (
-                  <option>Loading users...</option>
-                ) : (
-                  <>
-                    <option value="">Select User...</option>
-                    {users.map(user => (
-                      <option key={user.id} value={user.id}>
-                        {user.name}
-                      </option>
-                    ))}
-                  </>
-                )}
-              </select>
+              />
             </div>
           </div>
+        </div>
+        <div>
+          <button onClick={refreshUsers} type="button">
+            Refresh Users...
+          </button>
         </div>
         <div className="field">
           <div className="control">

@@ -11,6 +11,7 @@ export default class App extends React.Component {
     this.onFilterSubmit = this.onFilterSubmit.bind(this);
     this.fetchTodos = this.fetchTodos.bind(this);
     this.fetchUsers = this.fetchUsers.bind(this);
+    this.refreshUsers = this.refreshUsers.bind(this);
   }
 
   state = {
@@ -66,6 +67,10 @@ export default class App extends React.Component {
       clearInterval(this.interval);
       this.setState({ todosError: error, isLoadingTodos: false });
     }
+  }
+
+  refreshUsers() {
+    this.fetchUsers();
   }
 
   componentDidMount() {
@@ -130,6 +135,7 @@ export default class App extends React.Component {
                 users={users}
                 isLoadingUsers={isLoadingUsers}
                 updateUserSettings={this.onFilterSubmit}
+                refreshUsers={this.refreshUsers}
               />
             </div>
             <div className="column is-three-quarters">
