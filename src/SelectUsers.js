@@ -1,60 +1,42 @@
 import React from 'react';
 
-export default class SelectUsers extends React.Component {
-  constructor(props) {
-    super(props);
+const SelectUsers = ({ isLoading, userId, onChange, users }) => {
+  const [calculatedUsers, setCalculatedUsers] = React.useState([]);
 
-    this.state = {
-      calculatedUsers: []
-    };
-  }
-
-  expensiveCalculationOnUsers() {
-    if (this.props.users) {
+  React.useEffect(() => {
+    const expensiveCalculationOnUsers = () => {
       console.log('OMG this takes forever');
-      return this.props.users;
-    }
-    return [];
-  }
+      if (users) {
+        return setCalculatedUsers(users);
+      }
+      return setCalculatedUsers([]);
+    };
 
-  componentDidMount() {
-    this.setState({
-      calculatedUsers: this.expensiveCalculationOnUsers()
-    });
-  }
+    expensiveCalculationOnUsers();
+  }, [users]);
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.users !== this.props.users) {
-      this.setState({
-        calculatedUsers: this.expensiveCalculationOnUsers()
-      });
-    }
-  }
+  return (
+    <select
+      className="input"
+      disabled={isLoading || !calculatedUsers.length}
+      onChange={onChange}
+      value={userId}
+      name="userId"
+    >
+      {isLoading || !calculatedUsers.length ? (
+        <option>Loading users...</option>
+      ) : (
+        <>
+          <option value="">Select User...</option>
+          {calculatedUsers.map(user => (
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          ))}
+        </>
+      )}
+    </select>
+  );
+};
 
-  render() {
-    const { isLoading, userId, onChange } = this.props;
-
-    return (
-      <select
-        className="input"
-        disabled={isLoading || !this.state.calculatedUsers.length}
-        onChange={onChange}
-        value={userId}
-        name="userId"
-      >
-        {isLoading || !this.state.calculatedUsers.length ? (
-          <option>Loading users...</option>
-        ) : (
-          <>
-            <option value="">Select User...</option>
-            {this.state.calculatedUsers.map(user => (
-              <option key={user.id} value={user.id}>
-                {user.name}
-              </option>
-            ))}
-          </>
-        )}
-      </select>
-    );
-  }
-}
+export default SelectUsers;
