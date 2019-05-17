@@ -11,7 +11,7 @@ export default class SelectUsers extends React.Component {
 
   expensiveCalculationOnUsers() {
     if (this.props.users) {
-      console.log('This takes forever');
+      console.log('OMG this takes forever');
       return this.props.users;
     }
     return [];

@@ -89,7 +89,11 @@ export default class Filter extends React.Component {
           </div>
         </div>
         <div>
-          <button type="submit" className="button is-primary">
+          <button
+            type="submit"
+            className="button is-primary"
+            disabled={isLoadingUsers}
+          >
             Submit
           </button>
         </div>
