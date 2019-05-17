@@ -4,8 +4,7 @@ export default class Filter extends React.Component {
   constructor(props) {
     super(props);
 
-    this.updateUserSelect = this.updateUserSelect.bind(this);
-    this.updateUserRadio = this.updateUserRadio.bind(this);
+    this.updateFormInput = this.updateFormInput.bind(this);
   }
 
   state = {
@@ -15,22 +14,11 @@ export default class Filter extends React.Component {
     }
   };
 
-  updateUserSelect(e) {
-    const value = parseInt(e.currentTarget.value, 10);
-
+  updateFormInput(e) {
     this.setState({
       formData: {
         ...this.state.formData,
-        userId: value
-      }
-    });
-  }
-
-  updateUserRadio(e) {
-    this.setState({
-      formData: {
-        ...this.state.formData,
-        showCompleted: e.currentTarget.checked && e.currentTarget.value
+        [e.currentTarget.name]: e.currentTarget.value
       }
     });
   }
@@ -53,7 +41,7 @@ export default class Filter extends React.Component {
               <select
                 className="input"
                 disabled={isLoadingUsers || !users}
-                onChange={this.updateUserSelect}
+                onChange={this.updateFormInput}
                 value={this.state.formData.userId}
                 name="user"
               >
@@ -81,7 +69,7 @@ export default class Filter extends React.Component {
                 name="showCompleted"
                 value="All"
                 checked={this.state.formData.showCompleted === 'All'}
-                onChange={this.updateUserRadio}
+                onChange={this.updateFormInput}
               />{' '}
               All
             </label>
@@ -91,7 +79,7 @@ export default class Filter extends React.Component {
                 name="showCompleted"
                 checked={this.state.formData.showCompleted === 'Completed'}
                 value="Completed"
-                onChange={this.updateUserRadio}
+                onChange={this.updateFormInput}
               />{' '}
               Completed
             </label>
@@ -101,7 +89,7 @@ export default class Filter extends React.Component {
                 name="showCompleted"
                 checked={this.state.formData.showCompleted === 'Not Completed'}
                 value="Not Completed"
-                onChange={this.updateUserRadio}
+                onChange={this.updateFormInput}
               />{' '}
               Not Completed
             </label>

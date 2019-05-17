@@ -3,15 +3,14 @@ export class Api {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  fetchUsers() {
-    return this.sleep(500).then(() =>
-      fetch(`https://jsonplaceholder.typicode.com/users`).then(response =>
-        response.json()
-      )
-    );
+  async fetchUsers() {
+    // throw new Error('we messed up');
+    await this.sleep(500);
+    const response = await fetch(`https://jsonplaceholder.typicode.com/users`);
+    return await response.json();
   }
 
-  fetchTodosByUser(userId, showCompleted) {
+  async fetchTodosByUser(userId, showCompleted) {
     const query = `?userId=${userId}${
       showCompleted === 'Completed'
         ? '&completed=true'
@@ -20,11 +19,14 @@ export class Api {
         : ''
     }`;
 
-    return this.sleep(1500).then(() =>
-      fetch(`https://jsonplaceholder.typicode.com/todos${query}`).then(
-        response => response.json()
-      )
+    await this.sleep(1000);
+    if (userId === 10) {
+      throw new Error('User not found.');
+    }
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/todos${query}`
     );
+    return await response.json();
   }
 }
 

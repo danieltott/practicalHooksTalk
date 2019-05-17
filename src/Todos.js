@@ -2,7 +2,10 @@ import React from 'react';
 import Todo from './Todo';
 import { ReactComponent as Loader } from './Loader.svg';
 
-const Todos = ({ isLoading, todos, user, updatedAt }) => {
+const Todos = ({ isLoading, todos, user, updatedAt, error }) => {
+  if (error) {
+    return <div>{error.message}</div>;
+  }
   if (!todos && isLoading) {
     return <Loader className="loaderSvg" />;
   }

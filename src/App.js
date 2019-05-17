@@ -8,21 +8,24 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.updateUserSettings = this.updateUserSettings.bind(this);
+    this.onFilterSubmit = this.onFilterSubmit.bind(this);
     this.fetchTodos = this.fetchTodos.bind(this);
+    this.fetchUsers = this.fetchUsers.bind(this);
   }
 
   state = {
+    // fetching users state
     users: [],
     isLoadingUsers: false,
-    errors: null,
+    error: null,
+
+    // fetching todos state
     todos: null,
     isLoadingTodos: false,
     selectedUser: null,
     showCompleted: '',
-    timer: null,
     todosUpdatedAt: null,
-    updatedCount: 0
+    todosError: null
   };
 
   async fetchUsers() {
@@ -47,10 +50,9 @@ export default class App extends React.Component {
     const showCompleted = this.state.showCompleted;
     try {
       const data = await Api.fetchTodosByUser(userId, showCompleted);
-
       // if we've changed settings in the background, ignore this update
       if (
-        userId === this.state.updatedCount &&
+        userId === this.state.selectedUser.id &&
         showCompleted === this.state.showCompleted
       ) {
         // set our state
@@ -59,13 +61,9 @@ export default class App extends React.Component {
           isLoadingTodos: false,
           todosUpdatedAt: new Date()
         });
-        // refresh our data in 5 seconds
-        this.timer = setTimeout(() => {
-          this.fetchTodos();
-        }, 5000);
       }
     } catch (error) {
-      this.setState({ error, isLoadingTodos: false });
+      this.setState({ todosError: error, isLoadingTodos: false });
     }
   }
 
@@ -73,13 +71,15 @@ export default class App extends React.Component {
     this.fetchUsers();
   }
 
-  updateUserSettings(formData) {
+  onFilterSubmit(formData) {
     this.setState(
       {
-        selectedUser: this.state.users.find(u => u.id === formData.userId),
+        selectedUser: this.state.users.find(
+          u => u.id === parseInt(formData.userId, 10)
+        ),
         showCompleted: formData.showCompleted,
-        updatedCount: this.state.updatedCount + 1,
-        todos: null
+        todos: null,
+        todosError: null
       },
       () => {
         this.fetchTodos();
@@ -89,6 +89,7 @@ export default class App extends React.Component {
 
   componentDidCatch(error, info) {
     console.log({ error, info });
+    this.setState({ error });
   }
 
   render() {
@@ -98,8 +99,19 @@ export default class App extends React.Component {
       selectedUser,
       todosUpdatedAt,
       isLoadingTodos,
-      todos
+      todos,
+      error,
+      todosError
     } = this.state;
+
+    if (error) {
+      return (
+        <div>
+          <h3>There was an error:</h3>
+          <p>{error.message}</p>
+        </div>
+      );
+    }
     return (
       <section className="section">
         <div className="container">
@@ -108,7 +120,7 @@ export default class App extends React.Component {
               <Filter
                 users={users}
                 isLoadingUsers={isLoadingUsers}
-                updateUserSettings={this.updateUserSettings}
+                updateUserSettings={this.onFilterSubmit}
               />
             </div>
             <div className="column is-three-quarters">
@@ -117,6 +129,7 @@ export default class App extends React.Component {
                 updatedAt={todosUpdatedAt}
                 todos={todos}
                 isLoading={isLoadingTodos}
+                error={todosError}
               />
             </div>
           </div>
