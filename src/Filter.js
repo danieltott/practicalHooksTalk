@@ -10,12 +10,24 @@ export default class Filter extends React.Component {
 
   state = {
     userId: '',
-    showCompleted: 'All'
+    showCompleted: 'All',
+    isValid: false
   };
 
   updateFormInput(e) {
+    this.setState(
+      {
+        [e.currentTarget.name]: e.currentTarget.value
+      },
+      () => {
+        this.validate();
+      }
+    );
+  }
+
+  validate() {
     this.setState({
-      [e.currentTarget.name]: e.currentTarget.value
+      isValid: !!(this.state.userId && this.state.showCompleted)
     });
   }
 
@@ -92,7 +104,7 @@ export default class Filter extends React.Component {
           <button
             type="submit"
             className="button is-primary"
-            disabled={isLoadingUsers}
+            disabled={isLoadingUsers || !this.state.isValid}
           >
             Submit
           </button>
