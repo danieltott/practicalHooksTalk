@@ -55,7 +55,7 @@ describe('App', () => {
 
     const form = getByTestId('filtersform');
 
-    expect(form).toHaveFormValues({ user: '' });
+    expect(form).toHaveFormValues({ userId: '' });
   }, 20000);
 
   it('Loads todos for a user once one is selected', async () => {
