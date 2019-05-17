@@ -16,7 +16,7 @@ export default class App extends React.Component {
 
   state = {
     // fetching users state
-    users: [],
+    users: null,
     isLoadingUsers: false,
     error: null,
 
