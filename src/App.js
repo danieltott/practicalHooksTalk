@@ -16,44 +16,75 @@ export default class App extends React.Component {
     users: [],
     isLoadingUsers: false,
     errors: null,
-    todos: [],
+    todos: null,
     isLoadingTodos: false,
     selectedUser: null,
-    showCompleted: ''
+    showCompleted: '',
+    timer: null,
+    todosUpdatedAt: null,
+    updatedCount: 0
   };
 
-  fetchUsers() {
-    return Api.fetchUsers();
-  }
-
-  runFetchUsers() {
+  async fetchUsers() {
     this.setState({ isLoadingUsers: true });
-    this.fetchUsers()
-      .then(data =>
-        this.setState({
-          users: data,
-          isLoadingUsers: false
-        })
-      )
-      .catch(error => this.setState({ error, isLoadingUsers: false }));
+    try {
+      const data = await Api.fetchUsers();
+      return this.setState({
+        users: data,
+        isLoadingUsers: false
+      });
+    } catch (error) {
+      return this.setState({ error, isLoadingUsers: false });
+    }
   }
 
-  fetchTodos() {
-    return Api.fetchTodosByUser(
-      this.state.selectedUser.id,
-      this.state.showCompleted
-    );
+  async fetchTodos() {
+    this.setState({
+      isLoadingTodos: true
+    });
+
+    const userId = this.state.selectedUser.id;
+    const showCompleted = this.state.showCompleted;
+    try {
+      const data = await Api.fetchTodosByUser(userId, showCompleted);
+
+      // if we've changed settings in the background, ignore this update
+      if (
+        userId === this.state.updatedCount &&
+        showCompleted === this.state.showCompleted
+      ) {
+        // set our state
+        this.setState({
+          todos: data,
+          isLoadingTodos: false,
+          todosUpdatedAt: new Date()
+        });
+        // refresh our data in 5 seconds
+        this.timer = setTimeout(() => {
+          this.fetchTodos();
+        }, 5000);
+      }
+    } catch (error) {
+      this.setState({ error, isLoadingTodos: false });
+    }
   }
 
   componentDidMount() {
-    this.runFetchUsers();
+    this.fetchUsers();
   }
 
   updateUserSettings(formData) {
-    this.setState({
-      selectedUser: this.state.users.find(u => u.id === formData.userId),
-      showCompleted: formData.showCompleted
-    });
+    this.setState(
+      {
+        selectedUser: this.state.users.find(u => u.id === formData.userId),
+        showCompleted: formData.showCompleted,
+        updatedCount: this.state.updatedCount + 1,
+        todos: null
+      },
+      () => {
+        this.fetchTodos();
+      }
+    );
   }
 
   componentDidCatch(error, info) {
@@ -61,7 +92,14 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { isLoadingUsers, users, selectedUser, showCompleted } = this.state;
+    const {
+      isLoadingUsers,
+      users,
+      selectedUser,
+      todosUpdatedAt,
+      isLoadingTodos,
+      todos
+    } = this.state;
     return (
       <section className="section">
         <div className="container">
@@ -76,8 +114,9 @@ export default class App extends React.Component {
             <div className="column is-three-quarters">
               <Todos
                 user={selectedUser}
-                showCompleted={showCompleted}
-                fetchTodos={this.fetchTodos}
+                updatedAt={todosUpdatedAt}
+                todos={todos}
+                isLoading={isLoadingTodos}
               />
             </div>
           </div>
