@@ -63,6 +63,7 @@ export default class App extends React.Component {
         });
       }
     } catch (error) {
+      clearInterval(this.interval);
       this.setState({ todosError: error, isLoadingTodos: false });
     }
   }
