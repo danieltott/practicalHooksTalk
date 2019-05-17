@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const SelectUsers = ({ isLoading, userId, onChange, users }) => {
-  const [calculatedUsers, setCalculatedUsers] = React.useState([]);
+  const [calculatedUsers, setCalculatedUsers] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const expensiveCalculationOnUsers = () => {
       console.log('OMG this takes forever');
       if (users) {
