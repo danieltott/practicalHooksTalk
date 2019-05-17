@@ -71,6 +71,10 @@ export default class App extends React.Component {
     this.fetchUsers();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   onFilterSubmit(formData) {
     this.setState(
       {
@@ -83,6 +87,10 @@ export default class App extends React.Component {
       },
       () => {
         this.fetchTodos();
+        clearInterval(this.interval);
+        this.interval = setInterval(() => {
+          this.fetchTodos();
+        }, 6000);
       }
     );
   }
