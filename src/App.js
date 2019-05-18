@@ -23,10 +23,12 @@ export default class App extends React.Component {
     // fetching todos state
     todos: null,
     isLoadingTodos: false,
-    selectedUser: null,
-    showCompleted: '',
     todosUpdatedAt: null,
-    todosError: null
+    todosError: null,
+
+    // global
+    selectedUser: null,
+    showCompleted: ''
   };
 
   async fetchUsers() {
