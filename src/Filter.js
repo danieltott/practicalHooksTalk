@@ -41,7 +41,7 @@ const Filter = ({
   useEffect(() => {
     const validate = async () => {
       console.log('validating...');
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 200));
       dispatch({
         type: 'VALIDATE',
         isValid: !!(state.formData.userId && state.formData.showCompleted)
