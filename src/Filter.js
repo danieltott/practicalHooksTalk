@@ -1,28 +1,5 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import SelectUsers from './SelectUsers';
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'UPDATE_FORM_INPUT':
-      const formData = {
-        ...state.formData,
-        [action.name]: action.value
-      };
-
-      return {
-        ...state,
-        formData,
-        isValid: false
-      };
-    case 'VALIDATE':
-      return {
-        ...state,
-        isValid: action.isValid
-      };
-    default:
-      throw new Error('Invalid action type');
-  }
-};
 
 const Filter = ({
   isLoadingUsers,
@@ -30,40 +7,46 @@ const Filter = ({
   updateUserSettings,
   refreshUsers
 }) => {
-  const [state, dispatch] = useReducer(reducer, {
-    formData: {
-      userId: '',
-      showCompleted: 'All'
-    },
-    isValid: false
+  const [formData, setFormData] = useState({
+    userId: '',
+    showCompleted: 'All'
   });
-
-  useEffect(() => {
-    const validate = async () => {
-      console.log('validating...');
-      await new Promise(resolve => setTimeout(resolve, 200));
-      dispatch({
-        type: 'VALIDATE',
-        isValid: !!(state.formData.userId && state.formData.showCompleted)
-      });
-    };
-    validate();
-  }, [state.formData]);
+  const [isValid, setIsValid] = useState(false);
 
   function updateFormInput(e) {
-    dispatch({
-      type: 'UPDATE_FORM_INPUT',
-      name: e.currentTarget.name,
-      value: e.currentTarget.value
+    setFormData({
+      ...formData,
+      [e.currentTarget.name]: e.currentTarget.value
     });
+    setIsValid(false);
   }
 
+  useEffect(() => {
+    let isCurrent = true;
+    async function validate() {
+      console.log('validating');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (isCurrent) {
+        setIsValid(!!(formData.userId && formData.showCompleted));
+        console.log('validation complete');
+      } else {
+        console.log('validation cancelled');
+      }
+    }
+    validate();
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [formData]);
+
+  const { userId, showCompleted } = formData;
   return (
     <form
       data-testid="filtersform"
       onSubmit={e => {
         e.preventDefault();
-        updateUserSettings(state.formData);
+        updateUserSettings({ userId, showCompleted });
       }}
     >
       <legend className="title is-6 is-spaced">Filter Todos:</legend>
@@ -74,7 +57,7 @@ const Filter = ({
             <SelectUsers
               isLoading={isLoadingUsers}
               users={users}
-              userId={state.formData.userId}
+              userId={userId}
               onChange={updateFormInput}
             />
           </div>
@@ -92,7 +75,7 @@ const Filter = ({
               type="radio"
               name="showCompleted"
               value="All"
-              checked={state.formData.showCompleted === 'All'}
+              checked={showCompleted === 'All'}
               onChange={updateFormInput}
             />{' '}
             All
@@ -101,7 +84,7 @@ const Filter = ({
             <input
               type="radio"
               name="showCompleted"
-              checked={state.formData.showCompleted === 'Completed'}
+              checked={showCompleted === 'Completed'}
               value="Completed"
               onChange={updateFormInput}
             />{' '}
@@ -111,7 +94,7 @@ const Filter = ({
             <input
               type="radio"
               name="showCompleted"
-              checked={state.formData.showCompleted === 'Not Completed'}
+              checked={showCompleted === 'Not Completed'}
               value="Not Completed"
               onChange={updateFormInput}
             />{' '}
@@ -123,7 +106,7 @@ const Filter = ({
         <button
           type="submit"
           className="button is-primary"
-          disabled={isLoadingUsers || !state.isValid}
+          disabled={isLoadingUsers || !isValid}
         >
           Submit
         </button>
@@ -131,5 +114,4 @@ const Filter = ({
     </form>
   );
 };
-
 export default Filter;
