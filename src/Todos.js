@@ -1,8 +1,44 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import useLoadData from './useLoadData';
 import Todo from './Todo';
+import Api from './Api';
 import { ReactComponent as Loader } from './Loader.svg';
 
-const Todos = ({ isLoading, todos, user, updatedAt, error }) => {
+const Todos = ({ user, showCompleted }) => {
+  const [
+    { isLoading, data: todos, updatedAt, error },
+    loadTodos,
+    reset
+  ] = useLoadData(
+    useCallback(() => Api.fetchTodosByUser(user.id, showCompleted), [
+      user,
+      showCompleted
+    ]),
+    { runImmediately: false }
+  );
+
+  const interval = useRef();
+
+  useEffect(() => {
+    if (user) {
+      reset();
+      loadTodos();
+      interval.current = setInterval(() => {
+        loadTodos();
+      }, 6000);
+    }
+
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, [user, loadTodos, reset]);
+
+  useEffect(() => {
+    if (error) {
+      clearInterval(interval);
+    }
+  }, [error]);
+
   if (error) {
     return <div>{error.message}</div>;
   }
