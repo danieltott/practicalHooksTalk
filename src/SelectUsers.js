@@ -4,15 +4,11 @@ const SelectUsers = ({ isLoading, userId, onChange, users }) => {
   const [calculatedUsers, setCalculatedUsers] = useState([]);
 
   useEffect(() => {
-    const expensiveCalculationOnUsers = () => {
+    if (users) {
       console.log('OMG this takes forever');
-      if (users) {
-        return setCalculatedUsers(users);
-      }
-      return setCalculatedUsers([]);
-    };
-
-    expensiveCalculationOnUsers();
+      return setCalculatedUsers(users);
+    }
+    return setCalculatedUsers([]);
   }, [users]);
 
   return (
