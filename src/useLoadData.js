@@ -1,4 +1,4 @@
-import { useReducer, useMemo, useCallback, useEffect } from 'react';
+import { useReducer, useMemo, useCallback, useEffect, useRef } from 'react';
 
 const initialState = {
   isLoading: false,
@@ -43,23 +43,30 @@ export default function useLoadData(
   { runImmediately } = { runImmediately: true }
 ) {
   const [state, dispatch] = useReducer(loadDataReducer, initialState);
+  const startedAt = useRef();
 
   const load = useCallback(async () => {
+    const now = Date.now();
+    startedAt.current = now;
     dispatch({
       type: 'STARTED'
     });
 
     try {
       const data = await apiFn();
-      dispatch({
-        type: 'SUCCEEDED',
-        data
-      });
+      if (now === startedAt.current) {
+        dispatch({
+          type: 'SUCCEEDED',
+          data
+        });
+      }
     } catch (error) {
-      dispatch({
-        type: 'ERRORRED',
-        error
-      });
+      if (now === startedAt.current) {
+        dispatch({
+          type: 'ERRORRED',
+          error
+        });
+      }
     }
   }, [apiFn]);
 
