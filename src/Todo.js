@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card } from 'evergreen-ui';
-import Text from 'evergreen-ui/commonjs/typography/src/Text';
+import { Card, Text } from 'evergreen-ui';
 
 const Todo = ({ todo }) => {
   return (

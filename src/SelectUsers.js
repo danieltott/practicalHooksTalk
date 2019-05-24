@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from 'evergreen-ui/commonjs/select/src/Select';
+import { Select } from 'evergreen-ui';
 
 export default class SelectUsers extends React.Component {
   constructor(props) {

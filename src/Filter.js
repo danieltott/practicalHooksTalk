@@ -1,9 +1,13 @@
 import React from 'react';
 import SelectUsers from './SelectUsers';
-import { Heading, Pane, Button, Card } from 'evergreen-ui';
-import { SelectField } from 'evergreen-ui/commonjs/select';
-import { FormField } from 'evergreen-ui/commonjs/form-field';
-import { RadioGroup } from 'evergreen-ui/commonjs/radio';
+import {
+  Heading,
+  Pane,
+  Button,
+  Card,
+  FormField,
+  RadioGroup
+} from 'evergreen-ui';
 
 export default class Filter extends React.Component {
   constructor(props) {
