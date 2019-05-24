@@ -1,13 +1,6 @@
 import React from 'react';
 import SelectUsers from './SelectUsers';
-import {
-  Heading,
-  Pane,
-  Button,
-  Card,
-  FormField,
-  RadioGroup,
-} from 'evergreen-ui';
+import { Heading, Pane, Button, Card, FormField, Radio } from 'evergreen-ui';
 
 export default class Filter extends React.Component {
   constructor(props) {
@@ -94,14 +87,28 @@ export default class Filter extends React.Component {
           </Button>
         </Pane>
         <FormField label="Show:">
-          <RadioGroup
-            value={this.state.showCompleted}
-            options={[
-              { label: 'All', value: 'All' },
-              { label: 'Completed', value: 'Completed' },
-              { label: 'Not Completed', value: 'Not Completed' },
-            ]}
-            onChange={value => this.updateFormInput('showCompleted', value)}
+          <Radio
+            name="showCompleted"
+            value="All"
+            label="All"
+            checked={this.state.showCompleted === 'All'}
+            onChange={() => this.updateFormInput('showCompleted', 'All')}
+          />
+          <Radio
+            name="showCompleted"
+            value="Completed"
+            label="Completed"
+            checked={this.state.showCompleted === 'Completed'}
+            onChange={() => this.updateFormInput('showCompleted', 'Completed')}
+          />
+          <Radio
+            name="showCompleted"
+            value="Not Completed"
+            label="Not Completed"
+            checked={this.state.showCompleted === 'Not Completed'}
+            onChange={() =>
+              this.updateFormInput('showCompleted', 'Not Completed')
+            }
           />
         </FormField>
 
