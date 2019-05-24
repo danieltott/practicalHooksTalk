@@ -1,5 +1,9 @@
 import React from 'react';
 import SelectUsers from './SelectUsers';
+import { Heading, Pane, Button, Card } from 'evergreen-ui';
+import { SelectField } from 'evergreen-ui/commonjs/select';
+import { FormField } from 'evergreen-ui/commonjs/form-field';
+import { RadioGroup } from 'evergreen-ui/commonjs/radio';
 
 export default class Filter extends React.Component {
   constructor(props) {
@@ -14,10 +18,10 @@ export default class Filter extends React.Component {
     isValid: false
   };
 
-  updateFormInput(e) {
+  updateFormInput(name, value) {
     this.setState(
       {
-        [e.currentTarget.name]: e.currentTarget.value
+        [name]: value
       },
       () => {
         this.validate();
@@ -38,78 +42,75 @@ export default class Filter extends React.Component {
       updateUserSettings,
       refreshUsers
     } = this.props;
-    const { userId, showCompleted } = this.state;
+
     return (
-      <form
+      <Card
+        is="form"
+        border="default"
+        padding=".5em"
+        background="blueTint"
         data-testid="filtersform"
         onSubmit={e => {
           e.preventDefault();
-          updateUserSettings({ userId, showCompleted });
+          updateUserSettings({
+            userId: this.state.userId,
+            showCompleted: this.state.showCompleted
+          });
         }}
       >
-        <legend className="title is-6 is-spaced">Filter Todos:</legend>
-        <div className="field">
-          <label className="label">User:</label>
-          <div className="control">
-            <div className="select">
-              <SelectUsers
-                isLoading={isLoadingUsers}
-                users={users}
-                userId={this.state.userId}
-                onChange={this.updateFormInput}
-              />
-            </div>
-          </div>
-        </div>
-        <div>
-          <button onClick={refreshUsers} type="button">
+        <Heading
+          is="legend"
+          marginX="-.5em"
+          paddingX=".5em"
+          marginTop="-.5em"
+          paddingY=".5em"
+          marginBottom=".5em"
+          borderBottom="1px solid #E4E7EB"
+          size={300}
+        >
+          Filter Todos:
+        </Heading>
+        <FormField label="User:" labelFor="userId" paddingY="1em">
+          <SelectUsers
+            isLoading={isLoadingUsers}
+            users={users}
+            userId={this.state.userId}
+            onChange={this.updateFormInput}
+          />
+        </FormField>
+        <Pane marginBottom="1em">
+          <Button
+            appearance="minimal"
+            onClick={refreshUsers}
+            type="button"
+            height={24}
+            paddingX={0}
+          >
             Refresh Users...
-          </button>
-        </div>
-        <div className="field">
-          <div className="control">
-            <label className="radio">
-              <input
-                type="radio"
-                name="showCompleted"
-                value="All"
-                checked={this.state.showCompleted === 'All'}
-                onChange={this.updateFormInput}
-              />{' '}
-              All
-            </label>
-            <label className="radio">
-              <input
-                type="radio"
-                name="showCompleted"
-                checked={this.state.showCompleted === 'Completed'}
-                value="Completed"
-                onChange={this.updateFormInput}
-              />{' '}
-              Completed
-            </label>
-            <label className="radio">
-              <input
-                type="radio"
-                name="showCompleted"
-                checked={this.state.showCompleted === 'Not Completed'}
-                value="Not Completed"
-                onChange={this.updateFormInput}
-              />{' '}
-              Not Completed
-            </label>
-          </div>
-        </div>
-        <div>
-          <button
+          </Button>
+        </Pane>
+        <FormField label="Show:">
+          <RadioGroup
+            value={this.state.showCompleted}
+            options={[
+              { label: 'All', value: 'All' },
+              { label: 'Completed', value: 'Completed' },
+              { label: 'Not Completed', value: 'Not Completed' }
+            ]}
+            onChange={value => this.updateFormInput('showCompleted', value)}
+          />
+        </FormField>
+
+        <Pane textAlign="right">
+          <Button
             type="submit"
-            className="button is-primary"
             disabled={isLoadingUsers || !this.state.isValid}
+            appearance="primary"
           >
             Submit
-          </button>
-        </div>
-      </form>
+          </Button>
+        </Pane>
+      </Card>
     );
   }
 }

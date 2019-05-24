@@ -1,4 +1,5 @@
 import React from 'react';
+import Select from 'evergreen-ui/commonjs/select/src/Select';
 
 export default class SelectUsers extends React.Component {
   constructor(props) {
@@ -35,12 +36,12 @@ export default class SelectUsers extends React.Component {
     const { isLoading, userId, onChange } = this.props;
 
     return (
-      <select
-        className="input"
+      <Select
         disabled={isLoading || !this.state.calculatedUsers.length}
-        onChange={onChange}
+        onChange={e => onChange(e.currentTarget.name, e.currentTarget.value)}
         value={userId}
         name="userId"
+        id="userId"
       >
         {isLoading || !this.state.calculatedUsers.length ? (
           <option>Loading users...</option>
@@ -54,7 +55,7 @@ export default class SelectUsers extends React.Component {
             ))}
           </>
         )}
-      </select>
+      </Select>
     );
   }
 }

@@ -1,17 +1,19 @@
 import React from 'react';
+import { Card } from 'evergreen-ui';
+import Text from 'evergreen-ui/commonjs/typography/src/Text';
 
 const Todo = ({ todo }) => {
   return (
-    <div className="box">
-      <p
-        className="subtitle"
-        style={{
-          textDecoration: todo.completed ? 'line-through' : 'normal'
-        }}
-      >
+    <Card
+      padding="1em"
+      elevation={1}
+      marginBottom="1em"
+      textDecoration={todo.completed ? 'line-through' : 'normal'}
+    >
+      <Text>
         (User ID: {todo.userId}) {todo.title}
-      </p>
-    </div>
+      </Text>
+    </Card>
   );
 };
 

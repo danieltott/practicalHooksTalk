@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Pane, majorScale, Heading, Text } from 'evergreen-ui';
 import Api from './Api';
 import Todos from './Todos';
 import Filter from './Filter';
@@ -120,36 +120,44 @@ export default class App extends React.Component {
 
     if (error) {
       return (
-        <div>
-          <h3>There was an error:</h3>
-          <p>{error.message}</p>
-        </div>
+        <Pane
+          maxWidth={800}
+          border
+          marginX="auto"
+          marginY={majorScale(2)}
+          padding={majorScale(2)}
+          display="flex"
+        >
+          <Heading>There was an error:</Heading>
+          <Text>{error.message}</Text>
+        </Pane>
       );
     }
     return (
-      <section className="section">
-        <div className="container">
-          <div className="columns ">
-            <div className="column is-one-quarter">
-              <Filter
-                users={users}
-                isLoadingUsers={isLoadingUsers}
-                updateUserSettings={this.onFilterSubmit}
-                refreshUsers={this.refreshUsers}
-              />
-            </div>
-            <div className="column is-three-quarters">
-              <Todos
-                user={selectedUser}
-                updatedAt={todosUpdatedAt}
-                todos={todos}
-                isLoading={isLoadingTodos}
-                error={todosError}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <Pane
+        maxWidth={800}
+        marginX="auto"
+        marginY={majorScale(2)}
+        display="flex"
+      >
+        <Pane flex={1} padding={majorScale(2)}>
+          <Filter
+            users={users}
+            isLoadingUsers={isLoadingUsers}
+            updateUserSettings={this.onFilterSubmit}
+            refreshUsers={this.refreshUsers}
+          />
+        </Pane>
+        <Pane flex={3} padding={majorScale(2)}>
+          <Todos
+            user={selectedUser}
+            updatedAt={todosUpdatedAt}
+            todos={todos}
+            isLoading={isLoadingTodos}
+            error={todosError}
+          />
+        </Pane>
+      </Pane>
     );
   }
 }
