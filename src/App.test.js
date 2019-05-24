@@ -26,12 +26,12 @@ describe('App', () => {
       <App />
     );
 
-    const form = getByTestId('filtersform');
-    expect(form).toHaveFormValues({ showCompleted: 'All' });
+    expect(getByLabelText('All').checked).toBeTruthy();
 
     fireEvent.click(getByLabelText('Completed'));
 
-    expect(form).toHaveFormValues({ showCompleted: 'Completed' });
+    expect(getByLabelText('Completed').checked).toBeTruthy();
+    expect(getByLabelText('All').checked).toBeFalsy();
 
     // wait for promise to clear.
     await waitForElement(() => getByText('Leanne Graham'), {
