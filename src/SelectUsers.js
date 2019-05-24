@@ -17,20 +17,6 @@ const SelectUsers = ({ isLoading, userId, onChange, users }) => {
     setCalculatedUsers(expensiveCalculationOnUsers());
   }, [users]);
 
-  // componentDidMount() {
-  //   this.setState({
-  //     calculatedUsers: this.expensiveCalculationOnUsers(),
-  //   });
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.users !== this.props.users) {
-  //     this.setState({
-  //       calculatedUsers: this.expensiveCalculationOnUsers(),
-  //     });
-  //   }
-  // }
-
   return (
     <Select
       disabled={isLoading || !calculatedUsers.length}
