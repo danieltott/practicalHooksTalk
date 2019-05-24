@@ -6,7 +6,7 @@ import {
   Button,
   Card,
   FormField,
-  RadioGroup
+  RadioGroup,
 } from 'evergreen-ui';
 
 export default class Filter extends React.Component {
@@ -19,13 +19,13 @@ export default class Filter extends React.Component {
   state = {
     userId: '',
     showCompleted: 'All',
-    isValid: false
+    isValid: false,
   };
 
   updateFormInput(name, value) {
     this.setState(
       {
-        [name]: value
+        [name]: value,
       },
       () => {
         this.validate();
@@ -35,7 +35,7 @@ export default class Filter extends React.Component {
 
   validate() {
     this.setState({
-      isValid: !!(this.state.userId && this.state.showCompleted)
+      isValid: !!(this.state.userId && this.state.showCompleted),
     });
   }
 
@@ -44,7 +44,7 @@ export default class Filter extends React.Component {
       isLoadingUsers,
       users,
       updateUserSettings,
-      refreshUsers
+      refreshUsers,
     } = this.props;
 
     return (
@@ -58,7 +58,7 @@ export default class Filter extends React.Component {
           e.preventDefault();
           updateUserSettings({
             userId: this.state.userId,
-            showCompleted: this.state.showCompleted
+            showCompleted: this.state.showCompleted,
           });
         }}
       >
@@ -99,7 +99,7 @@ export default class Filter extends React.Component {
             options={[
               { label: 'All', value: 'All' },
               { label: 'Completed', value: 'Completed' },
-              { label: 'Not Completed', value: 'Not Completed' }
+              { label: 'Not Completed', value: 'Not Completed' },
             ]}
             onChange={value => this.updateFormInput('showCompleted', value)}
           />

@@ -6,7 +6,7 @@ export default class SelectUsers extends React.Component {
     super(props);
 
     this.state = {
-      calculatedUsers: []
+      calculatedUsers: [],
     };
   }
 
@@ -20,14 +20,14 @@ export default class SelectUsers extends React.Component {
 
   componentDidMount() {
     this.setState({
-      calculatedUsers: this.expensiveCalculationOnUsers()
+      calculatedUsers: this.expensiveCalculationOnUsers(),
     });
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.users !== this.props.users) {
       this.setState({
-        calculatedUsers: this.expensiveCalculationOnUsers()
+        calculatedUsers: this.expensiveCalculationOnUsers(),
       });
     }
   }

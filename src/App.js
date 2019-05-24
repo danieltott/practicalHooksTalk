@@ -26,7 +26,7 @@ export default class App extends React.Component {
     selectedUser: null,
     showCompleted: '',
     todosUpdatedAt: null,
-    todosError: null
+    todosError: null,
   };
 
   async fetchUsers() {
@@ -35,7 +35,7 @@ export default class App extends React.Component {
       const data = await Api.fetchUsers();
       return this.setState({
         users: data,
-        isLoadingUsers: false
+        isLoadingUsers: false,
       });
     } catch (error) {
       return this.setState({ error, isLoadingUsers: false });
@@ -44,7 +44,7 @@ export default class App extends React.Component {
 
   async fetchTodos() {
     this.setState({
-      isLoadingTodos: true
+      isLoadingTodos: true,
     });
 
     const userId = this.state.selectedUser.id;
@@ -60,7 +60,7 @@ export default class App extends React.Component {
         this.setState({
           todos: data,
           isLoadingTodos: false,
-          todosUpdatedAt: new Date()
+          todosUpdatedAt: new Date(),
         });
       }
     } catch (error) {
@@ -89,7 +89,7 @@ export default class App extends React.Component {
         ),
         showCompleted: formData.showCompleted,
         todos: null,
-        todosError: null
+        todosError: null,
       },
       () => {
         this.fetchTodos();
@@ -115,7 +115,7 @@ export default class App extends React.Component {
       isLoadingTodos,
       todos,
       error,
-      todosError
+      todosError,
     } = this.state;
 
     if (error) {
