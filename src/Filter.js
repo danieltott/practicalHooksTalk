@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SelectUsers from './SelectUsers';
 import { Heading, Pane, Button, Card, FormField, Radio } from 'evergreen-ui';
+import { Api } from './Api';
 
 const Filter = ({
   isLoadingUsers,
@@ -28,7 +29,7 @@ const Filter = ({
 
     const validate = async function() {
       // console.log('Validation started');
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await Api.sleep(250);
       if (isCurrent) {
         setIsValid(!!(formData.userId && formData.showCompleted));
         // console.log('Validation completed');
