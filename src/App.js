@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pane, majorScale, Heading, Text } from 'evergreen-ui';
+import { Pane, majorScale, Alert, Text } from 'evergreen-ui';
 import Api from './Api';
 import Todos from './Todos';
 import Filter from './Filter';
@@ -9,24 +9,21 @@ export default class App extends React.Component {
     super(props);
 
     this.onFilterSubmit = this.onFilterSubmit.bind(this);
-    this.fetchTodos = this.fetchTodos.bind(this);
     this.fetchUsers = this.fetchUsers.bind(this);
     this.refreshUsers = this.refreshUsers.bind(this);
   }
 
   state = {
+    // global error
+    globalError: null,
     // fetching users state
     users: null,
     isLoadingUsers: false,
-    error: null,
+    usersError: null,
 
-    // fetching todos state
-    todos: null,
-    isLoadingTodos: false,
+    // filter form state
     selectedUser: null,
     showCompleted: '',
-    todosUpdatedAt: null,
-    todosError: null,
   };
 
   async fetchUsers() {
@@ -38,34 +35,7 @@ export default class App extends React.Component {
         isLoadingUsers: false,
       });
     } catch (error) {
-      return this.setState({ error, isLoadingUsers: false });
-    }
-  }
-
-  async fetchTodos() {
-    this.setState({
-      isLoadingTodos: true,
-    });
-
-    const userId = this.state.selectedUser.id;
-    const showCompleted = this.state.showCompleted;
-    try {
-      const data = await Api.fetchTodosByUser(userId, showCompleted);
-      // if we've changed settings in the background, ignore this update
-      if (
-        userId === this.state.selectedUser.id &&
-        showCompleted === this.state.showCompleted
-      ) {
-        // set our state
-        this.setState({
-          todos: data,
-          isLoadingTodos: false,
-          todosUpdatedAt: new Date(),
-        });
-      }
-    } catch (error) {
-      clearInterval(this.interval);
-      this.setState({ todosError: error, isLoadingTodos: false });
+      return this.setState({ usersError: error, isLoadingUsers: false });
     }
   }
 
@@ -77,48 +47,31 @@ export default class App extends React.Component {
     this.fetchUsers();
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
   onFilterSubmit(formData) {
-    this.setState(
-      {
-        selectedUser: this.state.users.find(
-          u => u.id === parseInt(formData.userId, 10)
-        ),
-        showCompleted: formData.showCompleted,
-        todos: null,
-        todosError: null,
-      },
-      () => {
-        this.fetchTodos();
-        clearInterval(this.interval);
-        this.interval = setInterval(() => {
-          this.fetchTodos();
-        }, 6000);
-      }
-    );
+    this.setState({
+      selectedUser: this.state.users.find(
+        u => u.id === parseInt(formData.userId, 10)
+      ),
+      showCompleted: formData.showCompleted,
+    });
   }
 
   componentDidCatch(error, info) {
     console.log({ error, info });
-    this.setState({ error });
+    this.setState({ globalError: error });
   }
 
   render() {
     const {
       isLoadingUsers,
       users,
+      globalError,
+      usersError,
       selectedUser,
-      todosUpdatedAt,
-      isLoadingTodos,
-      todos,
-      error,
-      todosError,
+      showCompleted,
     } = this.state;
 
-    if (error) {
+    if (globalError || usersError) {
       return (
         <Pane
           maxWidth={800}
@@ -126,10 +79,11 @@ export default class App extends React.Component {
           marginX="auto"
           marginY={majorScale(2)}
           padding={majorScale(2)}
-          display="flex"
         >
-          <Heading>There was an error:</Heading>
-          <Text>{error.message}</Text>
+          <Alert intent="danger" title="There was an error:">
+            {globalError && <Text>{globalError.message}</Text>}
+            {usersError && <Text>{usersError.message}</Text>}
+          </Alert>
         </Pane>
       );
     }
@@ -149,13 +103,7 @@ export default class App extends React.Component {
           />
         </Pane>
         <Pane flex={3} padding={majorScale(2)}>
-          <Todos
-            user={selectedUser}
-            updatedAt={todosUpdatedAt}
-            todos={todos}
-            isLoading={isLoadingTodos}
-            error={todosError}
-          />
+          <Todos user={selectedUser} showCompleted={showCompleted} />
         </Pane>
       </Pane>
     );
