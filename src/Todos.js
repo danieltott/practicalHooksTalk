@@ -14,7 +14,7 @@ const Todos = ({ user, showCompleted }) => {
   const [{ data: todos, isLoading, updatedAt, error }, load, reset] = useLoad(
     apiFn,
     {
-      runImmediately: false,
+      loadImmediately: false,
     }
   );
 
