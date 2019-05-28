@@ -1,11 +1,11 @@
 export class Api {
-  sleep(ms) {
+  static sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async fetchUsers() {
     // throw new Error('we messed up');
-    await this.sleep(500);
+    await Api.sleep(500);
     const response = await fetch(`https://jsonplaceholder.typicode.com/users`);
     return await response.json();
   }
@@ -19,7 +19,7 @@ export class Api {
         : ''
     }`;
 
-    await this.sleep(1000);
+    await Api.sleep(1000);
     if (userId === 10) {
       throw new Error('User not found.');
     }
