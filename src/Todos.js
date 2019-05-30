@@ -4,9 +4,14 @@ import Todo from './Todo';
 import { Pane, Text, Heading, Spinner, majorScale } from 'evergreen-ui';
 import { Paragraph } from 'evergreen-ui/commonjs/typography';
 import useLoad from './useLoad';
+import { useUserFilterContext } from './UserFilterContext';
 
-const Todos = ({ user, showCompleted }) => {
+const Todos = () => {
   const Api = useApiClient();
+
+  const {
+    state: { user, showCompleted },
+  } = useUserFilterContext();
 
   const apiFn = useCallback(
     user ? () => Api.fetchTodosByUser(user.id, showCompleted) : () => null,
