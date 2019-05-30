@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useCallback } from 'react';
+import { useReducer, useEffect, useCallback, useRef } from 'react';
 
 const initialState = {
   data: null,
@@ -32,6 +32,9 @@ const reducer = (state, action) => {
         error: action.error,
       };
 
+    case 'RESET':
+      return initialState;
+
     default:
       throw new Error(
         `Unrecognized action type in useLoad reducer: ${action.type}`
@@ -42,7 +45,11 @@ const reducer = (state, action) => {
 export default function useLoad(apiFn, { loadImmediately = true } = {}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const requestedTime = useRef();
+
   const load = useCallback(async () => {
+    requestedTime.current = Date.now();
+    const localRequestedTime = requestedTime.current;
     // we are loading
     dispatch({
       type: 'LOADING_STARTED',
@@ -52,19 +59,27 @@ export default function useLoad(apiFn, { loadImmediately = true } = {}) {
       // do the actual api call
       const data = await apiFn();
 
-      // we are successful
-      dispatch({
-        type: 'LOADING_SUCCEEDED',
-        data,
-      });
+      if (localRequestedTime === requestedTime.current) {
+        // we are successful
+        dispatch({
+          type: 'LOADING_SUCCEEDED',
+          data,
+        });
+      }
     } catch (error) {
       // we have errored
-      dispatch({
-        type: 'LOADING_FAILED',
-        error,
-      });
+      if (localRequestedTime === requestedTime.current) {
+        dispatch({
+          type: 'LOADING_FAILED',
+          error,
+        });
+      }
     }
   }, [apiFn]);
+
+  const reset = useCallback(() => {
+    dispatch({ type: 'RESET' });
+  }, []);
 
   useEffect(() => {
     if (loadImmediately) {
@@ -72,7 +87,7 @@ export default function useLoad(apiFn, { loadImmediately = true } = {}) {
     }
   }, [loadImmediately, load]);
 
-  return [state, load];
+  return [state, load, reset];
 }
 
 // const [state, load] = useLoad(apiFn)
