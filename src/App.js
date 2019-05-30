@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Pane, majorScale, Alert, Text } from 'evergreen-ui';
 import { useApiClient } from './Api';
 import Todos from './Todos';
 import Filter from './Filter';
 import useLoad from './useLoad';
+import { useUserFilterContext } from './UserFilterContext';
 
 const withErrorBoundary = RenderedComponent =>
   class extends React.Component {
@@ -23,11 +24,7 @@ const withErrorBoundary = RenderedComponent =>
 
 const App = ({ globalError }) => {
   const Api = useApiClient();
-
-  const [{ selectedUser, showCompleted }, setFilter] = useState({
-    selectedUser: null,
-    showCompleted: '',
-  });
+  const { dispatch: userFilterDispatch } = useUserFilterContext();
 
   const [usersState, loadUsers] = useLoad(Api.fetchUsers);
 
@@ -42,8 +39,9 @@ const App = ({ globalError }) => {
   }
 
   function onFilterSubmit(formData) {
-    setFilter({
-      selectedUser: users.find(u => u.id === parseInt(formData.userId, 10)),
+    userFilterDispatch({
+      type: 'update',
+      user: users.find(u => u.id === parseInt(formData.userId, 10)),
       showCompleted: formData.showCompleted,
     });
   }
@@ -75,7 +73,7 @@ const App = ({ globalError }) => {
         />
       </Pane>
       <Pane flex={3} padding={majorScale(2)}>
-        <Todos user={selectedUser} showCompleted={showCompleted} />
+        <Todos />
       </Pane>
     </Pane>
   );
