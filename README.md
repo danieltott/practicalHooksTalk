@@ -6,12 +6,12 @@ This repo has branches containing each step along the way, from the [basic class
 
 I created Pull Requests detailing each step, to make it easy to see diffs along the way. Each pull request has notes on the specific steps taken:
 
-- [Step 1 - Convert Filter component](#5)
-- [Step 2 - Convert SelectUsers component](#6)
-- [Step 3 - Create useLoad custom hook and integrate into App component](#7)
-- [Step 4 - Convert Todos component](#8)
-- [Bonus Step 5 - Move api client into Context](#9)
-- [Bonus Step 6 - Create a UserFilter Context and Custom Hook](#10)
+- [Step 1 - Convert Filter component](https://github.com/danieltott/practicalHooksTalk/pull/5)
+- [Step 2 - Convert SelectUsers component](https://github.com/danieltott/practicalHooksTalk/pull/6)
+- [Step 3 - Create useLoad custom hook and integrate into App component](https://github.com/danieltott/practicalHooksTalk/pull/7)
+- [Step 4 - Convert Todos component](https://github.com/danieltott/practicalHooksTalk/pull/8)
+- [Bonus Step 5 - Move api client into Context](https://github.com/danieltott/practicalHooksTalk/pull/9)
+- [Bonus Step 6 - Create a UserFilter Context and Custom Hook](https://github.com/danieltott/practicalHooksTalk/pull/10)
 
 ([master](https://github.com/danieltott/practicalHooksTalk) and [the final branch are identical](https://github.com/danieltott/practicalHooksTalk/tree/06-Bonus-UserFilterContext))
 
