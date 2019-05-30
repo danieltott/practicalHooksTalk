@@ -1,11 +1,13 @@
 import React, { useEffect, useCallback } from 'react';
-import Api from './Api';
+import { useApiClient } from './Api';
 import Todo from './Todo';
 import { Pane, Text, Heading, Spinner, majorScale } from 'evergreen-ui';
 import { Paragraph } from 'evergreen-ui/commonjs/typography';
 import useLoad from './useLoad';
 
 const Todos = ({ user, showCompleted }) => {
+  const Api = useApiClient();
+
   const apiFn = useCallback(
     user ? () => Api.fetchTodosByUser(user.id, showCompleted) : () => null,
     [user, showCompleted]
