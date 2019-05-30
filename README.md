@@ -15,6 +15,8 @@ I created Pull Requests detailing each step, to make it easy to see diffs along 
 
 ([master](https://github.com/danieltott/practicalHooksTalk) and [the final branch are identical](https://github.com/danieltott/practicalHooksTalk/tree/06-Bonus-UserFilterContext))
 
+Feel free to leave comments or questions in issues or the PRs - would be happy to discuss anything!
+
 ## General Hooks Resources:
 Here are some resources I've found helpful:
 
