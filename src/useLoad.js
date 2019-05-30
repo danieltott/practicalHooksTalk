@@ -8,7 +8,7 @@ const initialState = {
 };
 
 const reducer = (state, action) => {
-  console.log({ state, action });
+  console.log({ ...action });
   switch (action.type) {
     case 'LOADING_STARTED':
       return {
@@ -67,9 +67,7 @@ export default function useLoad(apiFn, { loadImmediately = true } = {}) {
   }, [apiFn]);
 
   useEffect(() => {
-    console.log('use effect');
     if (loadImmediately) {
-      console.log('loadImmediately');
       load();
     }
   }, [loadImmediately, load]);
