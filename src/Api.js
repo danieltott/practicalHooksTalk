@@ -1,3 +1,5 @@
+import React, { createContext, useContext } from 'react';
+
 export class Api {
   static sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -30,4 +32,16 @@ export class Api {
   }
 }
 
-export default new Api();
+const ApiClient = new Api();
+
+export default ApiClient;
+
+export const ApiClientContext = createContext(null);
+
+export const useApiClient = () => useContext(ApiClientContext);
+
+export const ApiClientProvider = ({ children }) => (
+  <ApiClientContext.Provider value={ApiClient}>
+    {children}
+  </ApiClientContext.Provider>
+);
