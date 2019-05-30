@@ -4,16 +4,16 @@ In my [hooks talk for the Cleveland React Meetup](https://www.meetup.com/Clevela
 
 This repo has branches containing each step along the way, from the [basic class-based app](https://github.com/danieltott/practicalHooksTalk/tree/00-base) to the [completed thing](https://github.com/danieltott/practicalHooksTalk/tree/06-Bonus-UserFilterContext).
 
-I created Pull Requests detailing each step, to make it easy to see diffs along the way:
+I created Pull Requests detailing each step, to make it easy to see diffs along the way. Each pull request has notes on the specific steps taken:
 
-- [Bonus Step 6 - Create a UserFilter Context and Custom Hook](#10)
-- [Bonus Step 5 - Move api client into Context](#9)
-- [Step 4 - Convert Todos component](#8)
-- [Step 3 - Create useLoad custom hook and integrate into App component](#7)
-- [Step 2 - Convert SelectUsers component](#6)
 - [Step 1 - Convert Filter component](#5)
+- [Step 2 - Convert SelectUsers component](#6)
+- [Step 3 - Create useLoad custom hook and integrate into App component](#7)
+- [Step 4 - Convert Todos component](#8)
+- [Bonus Step 5 - Move api client into Context](#9)
+- [Bonus Step 6 - Create a UserFilter Context and Custom Hook](#10)
 
-([master](https://github.com/danieltott/practicalHooksTalk) and [the final branch are identical](https://github.com/danieltott/practicalHooksTalk/tree/06-Bonus-UserFilterContext)
+([master](https://github.com/danieltott/practicalHooksTalk) and [the final branch are identical](https://github.com/danieltott/practicalHooksTalk/tree/06-Bonus-UserFilterContext))
 
 ## General Hooks Resources:
 Here are some resources I've found helpful:
@@ -37,6 +37,8 @@ Here are some resources I've found helpful:
 # If you'd like to run this locally:
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+To install, clone the repo, then run `yarn install`
 
 ## Available Scripts
 
