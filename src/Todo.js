@@ -1,7 +1,12 @@
 import React from 'react';
 import { Card, Text } from 'evergreen-ui';
+import { useUserFilterContext } from './UserFilterContext';
 
 const Todo = ({ todo }) => {
+  const {
+    state: { user },
+  } = useUserFilterContext();
+
   return (
     <Card
       padding="1em"
@@ -10,7 +15,7 @@ const Todo = ({ todo }) => {
       textDecoration={todo.completed ? 'line-through' : 'normal'}
     >
       <Text>
-        (User ID: {todo.userId}) {todo.title}
+        (User: {user.name}) {todo.title}
       </Text>
     </Card>
   );
