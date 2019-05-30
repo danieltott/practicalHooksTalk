@@ -20,18 +20,16 @@ Here are some resources I've found helpful:
 
 - ### Hooks Docs
   An invaluable resource, expecially [Hooks Reference](https://reactjs.org/docs/hooks-reference.html) and [Hooks FAQs](https://reactjs.org/docs/hooks-faq.html)
+- ### [Official hooks ESLint Plugin](https://reactjs.org/docs/hooks-rules.html#eslint-plugin)
+  A fantastic tool to help with following the rules of hooks, and to help manage dependency arrays.
+- ### [`stop-runaway-react-effects`](https://github.com/kentcdodds/stop-runaway-react-effects)
+  A small package to help development - this overwrites `useEffect` to throw an error when an effect has run too many times at once. Prevents crashing your browser when you've [messed up an effect dependency and created an infinite loop](https://twitter.com/Jack_Franklin/status/1123255283839578119).
 - ### [A Complete Guide to `useEffect`](https://overreacted.io/a-complete-guide-to-useeffect/)
   A super-deep dive into `useEffect`; really helped me understand how to deal with effect dependencies and their relationship with the render.
 - ### [Writing Resilient Components](https://overreacted.io/writing-resilient-components/)
   A great resource for anyone writing components, but especially if you are beginning to use hooks.
 - ### [How to fetch data with React Hooks?](https://www.robinwieruch.de/react-hooks-fetch-data/)
   A seminal article on doing data fetching with Hooks. Robin runs through a number of different approaches and use-cases for fetching data.
-- ### [`stop-runaway-react-effects`](https://github.com/kentcdodds/stop-runaway-react-effects)
-  A small package to help development - this overwrites `useEffect` to throw an error when an effect has run too many times at once. Prevents crashing your browser when you've [messed up an effect dependency and created an infinite loop](https://twitter.com/Jack_Franklin/status/1123255283839578119).
-- ### [Official hooks ESLint Plugin](https://reactjs.org/docs/hooks-rules.html#eslint-plugin)
-  A fantastic tool to help with following the rules of hooks, and to help manage dependency arrays.
-
-
 
 
 # If you'd like to run this locally:
