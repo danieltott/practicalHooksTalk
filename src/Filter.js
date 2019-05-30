@@ -1,127 +1,130 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import SelectUsers from './SelectUsers';
 import { Heading, Pane, Button, Card, FormField, Radio } from 'evergreen-ui';
+import { Api } from './Api';
 
-export default class Filter extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.updateFormInput = this.updateFormInput.bind(this);
-  }
-
-  state = {
+const Filter = ({
+  isLoadingUsers,
+  users,
+  updateUserSettings,
+  refreshUsers,
+}) => {
+  const [formData, setFormData] = useState({
     userId: '',
     showCompleted: 'All',
-    isValid: false,
-  };
+  });
+  const [isValid, setIsValid] = useState(false);
 
-  updateFormInput(name, value) {
-    this.setState(
-      {
-        [name]: value,
-      },
-      () => {
-        this.validate();
-      }
-    );
-  }
-
-  validate() {
-    this.setState({
-      isValid: !!(this.state.userId && this.state.showCompleted),
+  function updateFormInput(name, value) {
+    setFormData({
+      ...formData,
+      [name]: value,
     });
+
+    setIsValid(false);
   }
 
-  render() {
-    const {
-      isLoadingUsers,
-      users,
-      updateUserSettings,
-      refreshUsers,
-    } = this.props;
+  useEffect(() => {
+    let isCurrent = true;
 
-    return (
-      <Card
-        is="form"
-        border="default"
-        padding=".5em"
-        background="blueTint"
-        data-testid="filtersform"
-        onSubmit={e => {
-          e.preventDefault();
-          updateUserSettings({
-            userId: this.state.userId,
-            showCompleted: this.state.showCompleted,
-          });
-        }}
+    const validate = async function() {
+      // console.log('Validation started');
+      await Api.sleep(250);
+      if (isCurrent) {
+        setIsValid(!!(formData.userId && formData.showCompleted));
+        // console.log('Validation completed');
+      } else {
+        // console.log('Validation cancelled');
+      }
+    };
+
+    validate();
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [formData]);
+
+  return (
+    <Card
+      is="form"
+      border="default"
+      padding=".5em"
+      background="blueTint"
+      data-testid="filtersform"
+      onSubmit={e => {
+        e.preventDefault();
+        updateUserSettings({
+          userId: formData.userId,
+          showCompleted: formData.showCompleted,
+        });
+      }}
+    >
+      <Heading
+        is="legend"
+        marginX="-.5em"
+        paddingX=".5em"
+        marginTop="-.5em"
+        paddingY=".5em"
+        marginBottom=".5em"
+        borderBottom="1px solid #E4E7EB"
+        size={300}
       >
-        <Heading
-          is="legend"
-          marginX="-.5em"
-          paddingX=".5em"
-          marginTop="-.5em"
-          paddingY=".5em"
-          marginBottom=".5em"
-          borderBottom="1px solid #E4E7EB"
-          size={300}
+        Filter Todos:
+      </Heading>
+      <FormField label="User:" labelFor="userId" paddingY="1em">
+        <SelectUsers
+          isLoading={isLoadingUsers}
+          users={users}
+          userId={formData.userId}
+          onChange={updateFormInput}
+        />
+      </FormField>
+      <Pane marginBottom="1em">
+        <Button
+          appearance="minimal"
+          onClick={refreshUsers}
+          type="button"
+          height={24}
+          paddingX={0}
         >
-          Filter Todos:
-        </Heading>
-        <FormField label="User:" labelFor="userId" paddingY="1em">
-          <SelectUsers
-            isLoading={isLoadingUsers}
-            users={users}
-            userId={this.state.userId}
-            onChange={this.updateFormInput}
-          />
-        </FormField>
-        <Pane marginBottom="1em">
-          <Button
-            appearance="minimal"
-            onClick={refreshUsers}
-            type="button"
-            height={24}
-            paddingX={0}
-          >
-            Refresh Users...
-          </Button>
-        </Pane>
-        <FormField label="Show:">
-          <Radio
-            name="showCompleted"
-            value="All"
-            label="All"
-            checked={this.state.showCompleted === 'All'}
-            onChange={() => this.updateFormInput('showCompleted', 'All')}
-          />
-          <Radio
-            name="showCompleted"
-            value="Completed"
-            label="Completed"
-            checked={this.state.showCompleted === 'Completed'}
-            onChange={() => this.updateFormInput('showCompleted', 'Completed')}
-          />
-          <Radio
-            name="showCompleted"
-            value="Not Completed"
-            label="Not Completed"
-            checked={this.state.showCompleted === 'Not Completed'}
-            onChange={() =>
-              this.updateFormInput('showCompleted', 'Not Completed')
-            }
-          />
-        </FormField>
+          Refresh Users...
+        </Button>
+      </Pane>
+      <FormField label="Show:">
+        <Radio
+          name="showCompleted"
+          value="All"
+          label="All"
+          checked={formData.showCompleted === 'All'}
+          onChange={() => updateFormInput('showCompleted', 'All')}
+        />
+        <Radio
+          name="showCompleted"
+          value="Completed"
+          label="Completed"
+          checked={formData.showCompleted === 'Completed'}
+          onChange={() => updateFormInput('showCompleted', 'Completed')}
+        />
+        <Radio
+          name="showCompleted"
+          value="Not Completed"
+          label="Not Completed"
+          checked={formData.showCompleted === 'Not Completed'}
+          onChange={() => updateFormInput('showCompleted', 'Not Completed')}
+        />
+      </FormField>
 
-        <Pane textAlign="right">
-          <Button
-            type="submit"
-            disabled={isLoadingUsers || !this.state.isValid}
-            appearance="primary"
-          >
-            Submit
-          </Button>
-        </Pane>
-      </Card>
-    );
-  }
-}
+      <Pane textAlign="right">
+        <Button
+          type="submit"
+          disabled={isLoadingUsers || !isValid}
+          appearance="primary"
+        >
+          Submit
+        </Button>
+      </Pane>
+    </Card>
+  );
+};
+export default Filter;
