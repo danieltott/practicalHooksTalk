@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Pane, majorScale, Alert, Text } from 'evergreen-ui';
-import Api from './Api';
+import { useApiClient } from './Api';
 import Todos from './Todos';
 import Filter from './Filter';
 import useLoad from './useLoad';
@@ -22,6 +22,8 @@ const withErrorBoundary = RenderedComponent =>
   };
 
 const App = ({ globalError }) => {
+  const Api = useApiClient();
+
   const [{ selectedUser, showCompleted }, setFilter] = useState({
     selectedUser: null,
     showCompleted: '',
